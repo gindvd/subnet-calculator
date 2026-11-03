@@ -84,8 +84,8 @@ def validate_subnet_mask(mask: int) -> int:
         right0bits += 1
 
     # Verify that all the bits to the left are 1's
-    if mask | ((1 << right0bits) - 1) != 0xffffffff:
-        raise ValueError(f"Invalid netmask:  /{dotquad}")
+    if (mask | ((1 << right0bits) - 1)) != 0xffffffff:
+        raise ValueError(f"Invalid netmask:  /{int_to_dotquad(mask)}")
     
     return right0bits
 
@@ -100,7 +100,7 @@ def ipv4_mask_len(dotquad: str) -> tuple[int, int]:
     mask: int = dotquad_to_int(dotquad)
 
     if mask == 0:
-        return 0
+        return 0, 32
 
     right0bits = validate_subnet_mask(mask)
 
@@ -194,7 +194,7 @@ def host_size_to_subnet_mask(host_size: int) -> str:
 
 def calculate_subnet(
     network_addr: str, subnet_mask: str, hosts_per_subnet: list[int]
-) -> tuple(list[str], list[str]):
+) -> tuple[list[str], list[str]]:
     """
     Divides a network into subnets
 
