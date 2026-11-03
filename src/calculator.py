@@ -24,7 +24,7 @@ def is_ipv4_address(dotquad: str) -> bool:
             return False
         
         num = int(octet)
-        if 0 > num > 255:
+        if not 0 <= num <= 255:
             return False
     
     return True
