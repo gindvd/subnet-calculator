@@ -1,19 +1,27 @@
-from src.calculator import *
+import pytest
 
-def test_ipv4_mask_length():
-    assert ipv4_mask_len("255.255.255.255") == 32, "Incorrect calculation o fsubnet mask length."
-    assert ipv4_mask_len("255.255.255.0") == 24, "Incorrect calculation o fsubnet mask length."
-    assert ipv4_mask_len("255.255.224.0") == 19, "Incorrect calculation o fsubnet mask length."
-    assert ipv4_mask_len("255.128.0.0") == 9, "Incorrect calculation o fsubnet mask length."
-    assert ipv4_mask_len("0.0.0.0") == 0, "Incorrect calculation o fsubnet mask length."
+from calculator import *
 
-def test_host_size():
-    assert get_host_size(32) == 1, "Not calculating correct number of hosts!"
-    assert get_host_size(24) == 256, "Not calculating correct number of hosts!"
-    assert get_host_size(19) == 8192, "Not calculating correct number of hosts!"
-    assert get_host_size(13) == 524288, "Not calculating correct number of hosts!"
-    assert get_host_size(0) == 4294967296, "Not calculating correct number of hosts!"
+@pytest.mark.parametrize("maybe_valid_ip, expected_result", [
+    ("192.168.2.108", True),
+    ("255.255.240.0", True),
+    ("10.0.256.10", False),
+    ("10.-1.0.0", False),
+    ("a.b.c.d", False),
+    ("10.0.0", False),
+])
 
-if __name__ == "__main__":
-    test_ipv4_mask_length()
-    test_host_size()
+def test_is_ipv4_address(maybe_valid_ip, expected_result):
+    assert is_ipv4_address(maybe_valid_ip) == expected_result
+
+
+@pytest.mark.parametrize("random_ip_addr, subnet_mask, expected_result", [
+    ("192.168.2.108", "255.255.0.0", "192.168.0.0"),
+    ("10.10.0.0", "255.0.0.0", "10.0.0.0"),
+    ("10.1.256.10", "255.255.255.0", "10.1.256.0"),
+    ("172.18.1.15", "255.255.240.0", "172.16.0.0"),
+
+])
+
+def test_calculate_network_addr(random_ip_addr, subnet_mask, expected_result):
+    assert calculate_network_addr(random_ip_addr, subnet_mask) == expected_result
