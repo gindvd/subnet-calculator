@@ -178,7 +178,7 @@ def calculate_network_addr(ip_addr: str, subnet_mask: str) -> str:
 
 def host_size_to_subnet_mask(host_size: int) -> str:
     """ Takes subnet size and converts into dotquad subnet mask """
-    
+
     mask: int = 0xffffffff ^ (host_size - 1)
     
     if mask == 0:
@@ -257,7 +257,7 @@ def get_broadcast_addr(network_addr: str, subnet_mask: str) -> str:
 
     _, host_bits = ipv4_mask_len(subnet_mask)
 
-    mask = ~(1 << host_bits) # Inverted host bits
+    mask = (1 << host_bits) - 1
 
     net_addr_int = dotquad_to_int(network_addr)
 
