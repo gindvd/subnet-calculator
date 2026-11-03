@@ -23,8 +23,8 @@ def is_ipv4_address(dotquad: str) -> bool:
         if not octet.isdigit():
             return False
         
-        octet = int(octet)
-        if 0 > octet > 255:
+        num = int(octet)
+        if 0 > num > 255:
             return False
     
     return True
