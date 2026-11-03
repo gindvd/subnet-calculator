@@ -25,3 +25,16 @@ def test_is_ipv4_address(maybe_valid_ip, expected_result):
 
 def test_calculate_network_addr(random_ip_addr, subnet_mask, expected_result):
     assert calculate_network_addr(random_ip_addr, subnet_mask) == expected_result
+
+
+@pytest.mark.parametrize("host_size, expected_result", [
+    (1, "255.255.255.255"),
+    (128, "255.255.255.128"),
+    (256, "255.255.255.0"),
+    (65536, "255.255.0.0"),
+    (2**20, "255.240.0.0"),
+    (4294967296, "0.0.0.0"),
+])
+
+def test_host_size_to_subnet_mask(host_size, expected_result):
+    assert host_size_to_subnet_mask(host_size) == expected_result
