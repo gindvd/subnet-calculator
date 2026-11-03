@@ -30,30 +30,6 @@ def is_ipv4_address(dotquad: str) -> bool:
     return True
 
 
-def starting_network(dotquad: str, network_bits: int) -> int:
-    """
-    Returns integer of lowest network that the given ip address could be in
-
-    Ex: IP 10.10.10.12 with subnet mask 255.255.248.0 returns 10.10.0.0 as integer
-    """
-    if not is_ipv4_address(dotquad):
-        raise ValueError(f"Invalid netmask: {dotquad}")
-    
-    if network_bits == 32:
-        return dotquad_to_int(dotquad)
-    
-    elif network_bits == 0:
-        return 0
-
-    octet_idx = network_bits // 8
-    octets = [int(octet) for octet in dotquad.split(".")]
-
-    for i in range(octet_idx, 4):
-        octets[i] = 0
-
-    return octets[0] << 24 | octets[1] << 16 | octets[2] << 8 | octets[3] 
-
-
 def dotquad_to_int(dotquad: str) -> int:
     """
     Returns integer that equals the ipv4 binary
@@ -148,6 +124,30 @@ def get_host_size(host_bits: int) -> int:
     return 2 ** host_bits
 
 
+def starting_network(dotquad: str, network_bits: int) -> int:
+    """
+    Returns integer of lowest network that the given ip address could be in
+
+    Ex: IP 10.10.10.12 with subnet mask 255.255.248.0 returns 10.10.0.0 as integer
+    """
+    if not is_ipv4_address(dotquad):
+        raise ValueError(f"Invalid netmask: {dotquad}")
+    
+    if network_bits == 32:
+        return dotquad_to_int(dotquad)
+    
+    elif network_bits == 0:
+        return 0
+
+    octet_idx = network_bits // 8
+    octets = [int(octet) for octet in dotquad.split(".")]
+
+    for i in range(octet_idx, 4):
+        octets[i] = 0
+
+    return octets[0] << 24 | octets[1] << 16 | octets[2] << 8 | octets[3] 
+
+
 def calculate_network_addr(ip_addr: str, subnet_mask: str) -> str:
     """
     Calculates the network address a given ip with given subnet mask is in
@@ -178,7 +178,11 @@ def calculate_network_addr(ip_addr: str, subnet_mask: str) -> str:
 
 def host_size_to_subnet_mask(host_size: int) -> str:
     """ Takes subnet size and converts into dotquad subnet mask """
-    mask: int = 0xffffffff ^ (~host_size)
+    
+    mask: int = 0xffffffff ^ (host_size - 1)
+    
+    if mask == 0:
+        return "0.0.0.0"
 
     _ = validate_subnet_mask(mask)
 
