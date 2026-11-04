@@ -1,6 +1,6 @@
 from ui.color import Color
 
-class Home:
+class HomeScreen:
 
     def __init__(self, app) -> None:
         self._app = app
@@ -16,18 +16,16 @@ class Home:
         print("2. Network Identification")
         print("0. Exit")
     
-    def select_option(self) -> None:
-        choice = input("\nSelect: ")
+    def handle_input(self, event: str) -> None:
+        if event == "1":
+            self._app.navigate("subnet")
 
-        
-        if choice == "1":
-            pass
+        elif event == "2":
+            self._app.navigate("network")
 
-        elif choice == "2":
-            pass
-
-        elif choice == "0":
-            pass
+        elif event == "0":
+            self._app.quit()
 
         else:
-            pass
+            print("Invalid option!")
+            input("Press Enter to continue...")
