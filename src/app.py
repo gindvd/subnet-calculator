@@ -1,4 +1,6 @@
 from ui.screens.home_screen import HomeScreen
+from ui.screens.subnet_screen import SubnetScreen
+from ui.screens.network_screen import NetworkScreen
 
 from ui.terminal import clear_terminal
 
