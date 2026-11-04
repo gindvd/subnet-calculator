@@ -29,11 +29,12 @@ class App:
         self.render()
 
         while self._running:
-            choice: str = input().strip()
+            choice: str = input("\nSelect: ").strip()
             self._current_window.handle_input(choice)
     
     def quit(self):
         self._running = False
+        clear_terminal()
 
 
 if __name__ == "__main__":
