@@ -26,11 +26,11 @@ class App:
         self._current_window.render()
 
     def run(self):
-        self._render()
+        self.render()
 
         while self._running:
-            choice = input().strip()
-            self._current_window.handle_input()
+            choice: str = input().strip()
+            self._current_window.handle_input(choice)
     
     def quit(self):
         self._running = False
