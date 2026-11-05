@@ -264,3 +264,22 @@ def get_broadcast_addr(network_addr: str, subnet_mask: str) -> str:
     broadcast_int = net_addr_int + mask # Gets the last ip address in the subnet
 
     return int_to_dotquad(broadcast_int)
+
+
+def check_same_network(ip_addr_1, subnet_mask, ip_addr_2) -> bool:
+    """
+    Checks if two ip address are inside the same network
+    """
+
+    if not (is_ipv4_address(ip_addr_1) or is_ipv4_address(ip_addr_2)):
+        raise ValueError("Not an aip address")
+
+    net_bits, host_bits = ipv4_mask_len(subnet_mask)
+
+    ip1_net_bits = dotquad_to_int(ip_addr_1) >> host_bits
+    ip2_net_bits = dotquad_to_int(ip_addr_2) >> host_bits
+
+    if ip1_net_bits == ip2_net_bits:
+        return True
+    
+    return False
