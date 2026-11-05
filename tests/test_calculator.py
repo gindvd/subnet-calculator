@@ -50,3 +50,14 @@ def test_host_size_to_subnet_mask(host_size, expected_result):
 
 def test_get_broadcast_addr(network_addr, subnet_mask, expected_result):
     assert get_broadcast_addr(network_addr, subnet_mask) == expected_result
+
+
+@pytest.mark.parametrize("ip_addr_1, subnet_mask, ip_addr_2, expected_result", [
+    ("192.168.10.25", "255.255.0.0", "192.168.255.5", True),
+    ("10.1.230.3", "255.255.255.0", "10.1.230.35", True),
+    ("172.18.7.250", "255.240.0.0", "172.24.94.25", True),
+    ("10.64.5.67", "255.224.0.0", "10.19.14.28", False),
+])
+
+def test_get_broadcast_addr(ip_addr_1, subnet_mask, ip_addr_2, expected_result):
+    assert check_same_network(ip_addr_1, subnet_mask, ip_addr_2) == expected_result
